@@ -41,6 +41,19 @@ A practice project
 - resources have URI(Uniform Resource Identifier)
 - service definition is not mandatory, can be done with Swagger, WADl
 
+### Richardson Maturity Model
+- Level 0: Expose SOAP with Rest
+- Level 1: Expose resources with proper URI
+- Level 2: Level 1 + proper HTTP methods
+- Level 3: Level 2 + Next possible actions/HATEOAS
+
+### Best Practices
+- Consumer first : is it a mobile/web app?
+- Make best use of HTTP(Request methods, response status)
+- No secure info in URI
+- Use plurals
+- Use noun for resources(for complicated cases, define a standard)
+
 ## HTTP
 - Hyper Text Transfer Protocol
 - http actions: Get, put, post, delete, fetch ...
