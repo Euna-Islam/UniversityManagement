@@ -1,39 +1,97 @@
 package com.euna.university.management.service;
 
+import com.euna.university.management.error.NoRecordFoundException;
 import com.euna.university.management.model.Course;
 import com.euna.university.management.repository.CourseRepository;
+import com.euna.university.management.service.impl.CourseServiceImpl;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class CourseServiceTest {
-    @Autowired
+    @Mock
     CourseRepository courseRepository;
 
-    @Autowired
-    CourseService courseService;
+    @InjectMocks
+    private CourseServiceImpl courseService;
 
     @Test
-    public void it_should_return_all_courses() throws Exception {
-        List<Course> allCourses = new ArrayList<>();
+    void createCourse_success() {
+        Course course = createCourse();
+        when(courseRepository.save(any(Course.class))).thenReturn(course);
+        Course createdCourse = courseService.createCourse(course);
 
+        assertNotNull(createdCourse);
+    }
+
+    @Test
+    void fetchCourseById_success() throws NoRecordFoundException {
+        BigInteger courseId = BigInteger.valueOf(1);
+        Course existingCourse = createCourse();
+        when(courseRepository.findById(courseId)).thenReturn(Optional.of(existingCourse));
+        Course fetchedCourse = courseService.fetchCourseById(courseId);
+
+        assertNotNull(fetchedCourse);
+    }
+
+    @Test
+    void fetchCourseById_failure() {
+        BigInteger nonExistingId = BigInteger.valueOf(500);
+        when(courseRepository.findById(nonExistingId)).thenReturn(Optional.empty());
+
+        assertThrows(NoRecordFoundException.class,
+                () -> courseService.fetchCourseById(nonExistingId));
+    }
+
+    @Test
+    void fetchAllCourses_success() {
+        List<Course> allCourses = new ArrayList<>();
+        when(courseRepository.findAll()).thenReturn(allCourses);
+        List<Course> fetchedCourses = courseService.fetchAllCourses();
+
+        assertNotNull(fetchedCourses);
+        Assertions.assertEquals(allCourses, fetchedCourses);
+    }
+
+    @Test
+    void deleteCourseById_success() {
+        BigInteger courseIdToDelete = BigInteger.valueOf(789);
+        Mockito.doNothing().when(courseRepository).deleteById(courseIdToDelete);
+
+        assertDoesNotThrow(() -> courseService.deleteCourseById(courseIdToDelete));
+
+        verify(courseRepository, times(1)).deleteById(courseIdToDelete);
+    }
+
+    @Test
+    void deleteCourseById_failure() {
+        BigInteger nonExistingId = BigInteger.valueOf(999);
+        doThrow(EmptyResultDataAccessException.class).when(courseRepository).deleteById(nonExistingId);
+
+        assertThrows(NoRecordFoundException.class, () -> courseService.deleteCourseById(nonExistingId));
+    }
+
+    Course createCourse() {
         Course course = new Course();
         course.setCourseid(new BigInteger("1"));
         course.setCoursename("TestCourse");
         course.setAuthor("Angel");
-//        courseRepository.save(course);
-//        allCourses.add(course);
-
-//        Mockito.when(courseRepository.).thenReturn(allCourses);
-//
-//        mockMvc.perform(get("/fetchAllCourses"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$[0].coursename", Matchers.is("TestCourse")));
+        return course;
     }
 }
