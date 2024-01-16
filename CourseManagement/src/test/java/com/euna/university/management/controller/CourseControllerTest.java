@@ -1,9 +1,13 @@
 package com.euna.university.management.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+import com.euna.university.management.error.NoRecordFoundException;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,13 +36,13 @@ public class CourseControllerTest {
     MockMvc mockMvc;
 
     @Test
-    public void it_should_return_index() throws Exception {
+    public void index_success() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void it_should_return_all_courses() throws Exception {
+    public void returnAllCourses_success() throws Exception {
         List<Course> allCourses = new ArrayList<>();
 
         Course course = new Course();
@@ -47,7 +51,8 @@ public class CourseControllerTest {
         course.setAuthor("Angel");
         allCourses.add(course);
 
-        Mockito.when(courseService.fetchAllCourses()).thenReturn(allCourses);
+        Mockito.when(courseService.fetchAllCourses())
+                .thenReturn(allCourses);
 
         mockMvc.perform(get("/fetchAllCourses"))
                 .andExpect(status().isOk())
@@ -57,13 +62,14 @@ public class CourseControllerTest {
     }
 
     @Test
-    public void it_should_return_one_course_by_id() throws Exception {
+    public void returnCourseById_success() throws Exception {
         Course course = new Course();
         course.setCourseid(new BigInteger("1"));
         course.setCoursename("TestCourse");
         course.setAuthor("Angel");
 
-        Mockito.when(courseService.fetchCourseById(new BigInteger("1"))).thenReturn(course);
+        Mockito.when(courseService.fetchCourseById(new BigInteger("1")))
+                .thenReturn(course);
 
         mockMvc.perform(get("/fetchCourseById/1"))
                 .andExpect(status().isOk())
@@ -73,13 +79,7 @@ public class CourseControllerTest {
     }
 
     @Test
-    public void it_should_return_void() throws Exception {
-           mockMvc.perform(MockMvcRequestBuilders.delete("/deleteCourse/1"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void it_should_return_created_course() throws Exception {
+    public void saveCourse_success() throws Exception {
         String uri = "/createCourse";
 
         Course course = new Course();
@@ -98,19 +98,38 @@ public class CourseControllerTest {
     }
 
     @Test
-    public void it_should_return_bad_request() throws Exception {
+    public void saveCourse_failure() throws Exception {
         String uri = "/createCourse";
 
         mockMvc.perform(MockMvcRequestBuilders.post(uri)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE).content("{\"courseid\": 1}"))
-                .andExpect(status().isBadRequest());
+               .contentType(MediaType.APPLICATION_JSON_VALUE).content("{\"courseid\": 1}"))
+               .andExpect(status().isBadRequest());
     }
 
-//    @Test
-//    public void it_should_return_NoRecordFoundException() throws Exception {
-////        Mockito.when(courseService.deleteCourseById(new BigInteger("1"))).thenThrow(new NoRecordFoundException("Course id '4' does no exist"));
-//        mockMvc.perform(MockMvcRequestBuilders.delete("/deleteCourse/1"))
-//                .andExpect(status().isOk());
-//    }
+    @Test
+    public void deleteCourseById_success() throws Exception {
+        Mockito
+                .doNothing()
+                .when(courseService)
+                .deleteCourseById(any(BigInteger.class));
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/deleteCourse/{id}", BigInteger.valueOf(123))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(courseService).deleteCourseById(BigInteger.valueOf(123));
+    }
+
+    @Test
+    void deleteCourseById_failure() throws Exception {
+        doThrow(NoRecordFoundException.class).when(courseService).deleteCourseById(any(BigInteger.class));
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/deleteCourse/{id}", BigInteger.valueOf(123))
+               .contentType(MediaType.APPLICATION_JSON))
+               .andExpect(status().isNotFound()); // Expecting a 404 status code for NoRecordFoundException
+
+        verify(courseService).deleteCourseById(BigInteger.valueOf(123));
+    }
 
 }
