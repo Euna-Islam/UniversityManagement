@@ -16,6 +16,8 @@ An ongoing practice project
   - [Spring Boot](#spring-boot)
   - [Spring Boot Architecture](#spring-boot-architecture)
   - [Spring Cloud](#spring-cloud)
+  - [Build automation with Maven](#build-automation-with-maven)
+  - [Testing Frameworks](#testing-frameworks)
 
 # Tech Stack
 - JAVA 16
@@ -156,3 +158,19 @@ Spring Boot has 4 layers:
 - Dynamic load balancing: Ribbon can be used to ensure that the load is distributed
 - Visibility and Monitoring: Spring Cloud Slout can be used to assign ID to requests across multiple components. Zipkin can trace request across components. To avoid implementing common solutions in every service, we can use API Gateway.
 - To handle fault tolerance, we can use hystrix
+
+## Build automation with Maven
+- Build automation tool, uses XML
+- Follows a convention over configuration for build life cycle
+- Maven plugins and dependencies are configured in Pom, rely on central repo
+
+## Testing Frameworks
+### Junit
+- Uses annotations @Test, @Before, @After for setup/define test methods
+- has assertion methods for verifying expected outcomes in test cases
+- supports default/custom test runners for verifying test cases
+  
+### Mockito
+- Mocking framework that creates mock objects for testing, mock objects simulate the object's behavior without running actual code
+- provides stubbing options, e.g- by using 'when' and 'thenReturn', we can define what should happen when a method is called
+- we can use 'verify' to check if certain mock objects were actually called
