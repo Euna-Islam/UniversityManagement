@@ -1,5 +1,5 @@
 # Project Overview
-An ongoing practice project
+This project is a microservice that serves as the backend for a University Management System.
 
 ## Table of Contents
 - [Tech Stack](#tech-stack)
@@ -20,17 +20,15 @@ An ongoing practice project
   - [Testing Frameworks](#testing-frameworks)
 
 # Tech Stack
-- JAVA 16
-- Spring Boot
-- Spring Cloud
-- Rest
-- Swagger
-- Junit, Mockito
-- Jacoco
-- JPA
-- Maven
-
-
+- **Java 16:** Java 16 was chosen because of the plan of adding this API to a microservice system, and Java 16 offers efficient inter-process communication on the same host
+- **Spring Boot:** Spring Boot was chosen for its convention-over-configuration approach, simplifying the setup and development of the application.
+- **JPA:** JPA is used for object-relational mapping, allowing seamless interaction with the database.
+- **SQLite:** SQLite was selected as the database engine for its lightweight, serverless architecture
+- **REST:** The REST architectural style was chosen for designing the API to ensure scalability.
+- **Junit-Mockito:** Junit and Mockito are used for testing the application.
+- **Jacoco:** Jacoco is used for code coverage analysis
+- **Swagger:** Swagger is used to automatically generate API documentation.
+- **Maven:** Maven is used for project management and builds because it offers an organized approach to a development workflow.
 
 # Concepts
 
