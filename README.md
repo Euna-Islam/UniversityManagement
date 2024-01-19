@@ -1,6 +1,9 @@
 # Project Overview
 This project is a microservice that serves as the backend for a University Management System.
 
+# Idea
+In joint master's programs across different universities, students and teachers face challenges in managing and updating their course information. My project aims to simplify this process by creating a centralized system, allowing users to enter course details only once and ensuring that updates are synchronized across various university portals, reducing redundancy and saving time.
+
 ## Table of Contents
 - [Tech Stack](#tech-stack)
 - [Concepts](#concepts)
