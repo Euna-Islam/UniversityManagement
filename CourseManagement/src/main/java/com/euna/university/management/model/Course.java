@@ -18,15 +18,15 @@ import java.math.BigInteger;
 public class Course {
     @Id
     @Min(value = 1L, message = "The value must be greater than zero")
-    public BigInteger courseid;
+    public BigInteger courseId;
 
     @NotBlank(message="Course name is mandatory")
     @ApiModelProperty(notes = "Course name is mandatory")
-    public String coursename;
+    public String courseName;
 
-    @NotBlank(message="Author name is mandatory")
-    @ApiModelProperty(notes = "Author name is mandatory")
-    public String author;
+    @NotBlank(message="Course code is mandatory")
+    @ApiModelProperty(notes = "Course code is mandatory")
+    public String courseCode;
 
     public Course() {
     }

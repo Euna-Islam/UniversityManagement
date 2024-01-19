@@ -14,4 +14,6 @@ public interface CourseService {
     List<Course> fetchAllCourses();
 
     void deleteCourseById(BigInteger id) throws NoRecordFoundException;
+
+    Course updateCourse(BigInteger id, Course updatedCourse) throws NoRecordFoundException;
 }

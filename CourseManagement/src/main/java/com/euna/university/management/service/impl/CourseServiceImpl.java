@@ -40,4 +40,13 @@ public class CourseServiceImpl implements CourseService {
             throw new NoRecordFoundException("Course id '" + id + "' does no exist");
         }
     }
+
+    @Override
+    public Course updateCourse(BigInteger id, Course updatedCourse) throws NoRecordFoundException {
+        Course course = fetchCourseById(id);
+
+        course.setCourseName(updatedCourse.getCourseName());
+        course.setCourseCode(updatedCourse.getCourseCode());
+        return courseRepository.save(course);
+    }
 }
