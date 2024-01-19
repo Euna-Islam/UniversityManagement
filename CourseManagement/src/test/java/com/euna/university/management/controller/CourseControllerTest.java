@@ -46,9 +46,9 @@ public class CourseControllerTest {
         List<Course> allCourses = new ArrayList<>();
 
         Course course = new Course();
-        course.setCourseid(new BigInteger("1"));
-        course.setCoursename("TestCourse");
-        course.setAuthor("Angel");
+        course.setCourseId(new BigInteger("1"));
+        course.setCourseName("TestCourse");
+        course.setCourseCode("Angel");
         allCourses.add(course);
 
         Mockito.when(courseService.fetchAllCourses())
@@ -56,26 +56,26 @@ public class CourseControllerTest {
 
         mockMvc.perform(get("/fetchAllCourses"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].courseid", Matchers.is(1)))
-                .andExpect(jsonPath("$[0].coursename", Matchers.is("TestCourse")))
-                .andExpect(jsonPath("$[0].author", Matchers.is("Angel")));
+                .andExpect(jsonPath("$[0].courseId", Matchers.is(1)))
+                .andExpect(jsonPath("$[0].courseName", Matchers.is("TestCourse")))
+                .andExpect(jsonPath("$[0].courseCode", Matchers.is("Angel")));
     }
 
     @Test
     public void returnCourseById_success() throws Exception {
         Course course = new Course();
-        course.setCourseid(new BigInteger("1"));
-        course.setCoursename("TestCourse");
-        course.setAuthor("Angel");
+        course.setCourseId(new BigInteger("1"));
+        course.setCourseName("TestCourse");
+        course.setCourseCode("Angel");
 
         Mockito.when(courseService.fetchCourseById(new BigInteger("1")))
                 .thenReturn(course);
 
         mockMvc.perform(get("/fetchCourseById/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.courseid", Matchers.is(1)))
-                .andExpect(jsonPath("$.coursename", Matchers.is("TestCourse")))
-                .andExpect(jsonPath("$.author", Matchers.is("Angel")));
+                .andExpect(jsonPath("$.courseId", Matchers.is(1)))
+                .andExpect(jsonPath("$.courseName", Matchers.is("TestCourse")))
+                .andExpect(jsonPath("$.courseCode", Matchers.is("Angel")));
     }
 
     @Test
@@ -83,18 +83,18 @@ public class CourseControllerTest {
         String uri = "/createCourse";
 
         Course course = new Course();
-        course.setCourseid(new BigInteger("1"));
-        course.setCoursename("TestCourse");
-        course.setAuthor("Angel");
+        course.setCourseId(new BigInteger("1"));
+        course.setCourseName("TestCourse");
+        course.setCourseCode("Angel");
 
         Mockito.when(courseService.createCourse(course)).thenReturn(course);
 
         mockMvc.perform(MockMvcRequestBuilders.post(uri)
-                .contentType(MediaType.APPLICATION_JSON_VALUE).content("{\"courseid\": 1,\"coursename\": \"TestCourse\",\"author\": \"Angel\"}"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE).content("{\"courseId\": 1,\"courseName\": \"TestCourse\",\"courseCode\": \"Angel\"}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.courseid", Matchers.is(1)))
-                .andExpect(jsonPath("$.coursename", Matchers.is("TestCourse")))
-                .andExpect(jsonPath("$.author", Matchers.is("Angel")));
+                .andExpect(jsonPath("$.courseId", Matchers.is(1)))
+                .andExpect(jsonPath("$.courseName", Matchers.is("TestCourse")))
+                .andExpect(jsonPath("$.courseCode", Matchers.is("Angel")));
     }
 
     @Test

@@ -89,9 +89,9 @@ public class CourseServiceTest {
 
     Course createCourse() {
         Course course = new Course();
-        course.setCourseid(new BigInteger("1"));
-        course.setCoursename("TestCourse");
-        course.setAuthor("Angel");
+        course.setCourseId(new BigInteger("1"));
+        course.setCourseName("TestCourse");
+        course.setCourseCode("Angel");
         return course;
     }
 }
