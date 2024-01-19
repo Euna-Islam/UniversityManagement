@@ -49,6 +49,12 @@ public class CourseController {
         courseService.deleteCourseById(id);
     }
 
+    @RequestMapping(method = RequestMethod.PUT, value="/updateCourse/{id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public Course updateCourse(@PathVariable("id") BigInteger id, @RequestBody Course course) {
+        return courseService.updateCourse(id, course);
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
