@@ -4,6 +4,7 @@ import com.euna.university.management.error.NoRecordFoundException;
 import com.euna.university.management.model.Course;
 import com.euna.university.management.repository.CourseRepository;
 import com.euna.university.management.service.impl.CourseServiceImpl;
+import com.euna.university.management.util.CourseUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +34,7 @@ public class CourseServiceTest {
 
     @Test
     void createCourse_success() {
-        Course course = createCourse();
+        Course course = CourseUtil.createCourse();
         when(courseRepository.save(any(Course.class))).thenReturn(course);
         Course createdCourse = courseService.createCourse(course);
 
@@ -43,7 +44,7 @@ public class CourseServiceTest {
     @Test
     void fetchCourseById_success() throws NoRecordFoundException {
         BigInteger courseId = BigInteger.valueOf(1);
-        Course existingCourse = createCourse();
+        Course existingCourse = CourseUtil.createCourse();
         when(courseRepository.findById(courseId)).thenReturn(Optional.of(existingCourse));
         Course fetchedCourse = courseService.fetchCourseById(courseId);
 
@@ -87,11 +88,26 @@ public class CourseServiceTest {
         assertThrows(NoRecordFoundException.class, () -> courseService.deleteCourseById(nonExistingId));
     }
 
-    Course createCourse() {
-        Course course = new Course();
-        course.setCourseId(new BigInteger("1"));
-        course.setCourseName("TestCourse");
-        course.setCourseCode("Angel");
-        return course;
+    @Test
+    void updateCourse_success() {
+        BigInteger id = BigInteger.valueOf(1);
+        Course course = CourseUtil.createCourse();
+        when(courseRepository.findById(id)).thenReturn(Optional.of(course));
+        when(courseRepository.save(any(Course.class))).thenReturn(course);
+        Course updatedCourse = courseService.updateCourse(id, course);
+
+        assertNotNull(updatedCourse);
+
+        verify(courseRepository, times(1)).save(course);
+    }
+
+    @Test
+    void updateCourse_failure() {
+        BigInteger id = BigInteger.valueOf(1);
+        Course course = CourseUtil.createCourse();
+        when(courseRepository.findById(id)).thenThrow(new NoRecordFoundException("Course id '\" + id + \"' does no exist"));
+        assertThrows(NoRecordFoundException.class, () -> courseService.updateCourse(id, course));
+
+        verify(courseRepository, times(1)).findById(id);
     }
 }

@@ -10,8 +10,9 @@ This project is a microservice that serves as the backend for a University Cours
 ## Features
 - **Course Management:**
   - Create, Read, Update, and Delete (CRUD) operations for courses.
-  - Retrieve a list of all available courses.
-  - Get details of a specific course by its unique identifier.
+  - Unit tests
+  - Test Coverage
+  - Documentation
   
 ## Overview
 This project is  a REST API built with Java and Spring Boot. It provides endpoints for CRUD operations.

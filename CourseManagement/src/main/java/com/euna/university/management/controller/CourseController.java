@@ -39,12 +39,13 @@ public class CourseController {
     @RequestMapping(method = RequestMethod.POST, value="/createCourse",
             produces = "application/json; charset=UTF-8")
     @ResponseBody
+    @ResponseStatus(HttpStatus.CREATED)
     public Course saveCourse(@Valid @RequestBody Course course) {
         return courseService.createCourse(course);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value="/deleteCourse/{id}")
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteCourseById(@PathVariable("id") BigInteger id) {
         courseService.deleteCourseById(id);
     }
