@@ -1,5 +1,6 @@
 package com.euna.university.management.controller;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -8,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.euna.university.management.error.NoRecordFoundException;
+import com.euna.university.management.util.CourseUtil;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,10 +47,7 @@ public class CourseControllerTest {
     public void returnAllCourses_success() throws Exception {
         List<Course> allCourses = new ArrayList<>();
 
-        Course course = new Course();
-        course.setCourseId(new BigInteger("1"));
-        course.setCourseName("TestCourse");
-        course.setCourseCode("Angel");
+        Course course = CourseUtil.createCourse();
         allCourses.add(course);
 
         Mockito.when(courseService.fetchAllCourses())
@@ -58,15 +57,13 @@ public class CourseControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].courseId", Matchers.is(1)))
                 .andExpect(jsonPath("$[0].courseName", Matchers.is("TestCourse")))
-                .andExpect(jsonPath("$[0].courseCode", Matchers.is("Angel")));
+                .andExpect(jsonPath("$[0].courseCode", Matchers.is("Angel")))
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 
     @Test
     public void returnCourseById_success() throws Exception {
-        Course course = new Course();
-        course.setCourseId(new BigInteger("1"));
-        course.setCourseName("TestCourse");
-        course.setCourseCode("Angel");
+        Course course = CourseUtil.createCourse();
 
         Mockito.when(courseService.fetchCourseById(new BigInteger("1")))
                 .thenReturn(course);
@@ -79,19 +76,30 @@ public class CourseControllerTest {
     }
 
     @Test
+    public void returnCourseById_failure() throws Exception {
+        doThrow(NoRecordFoundException.class)
+                .when(courseService)
+                .fetchCourseById(any(BigInteger.class));
+
+        mockMvc.perform(get("/fetchCourseById/1"))
+                .andExpect(status().isNotFound());
+
+        verify(courseService).fetchCourseById(BigInteger.valueOf(1));
+    }
+
+    @Test
     public void saveCourse_success() throws Exception {
         String uri = "/createCourse";
 
-        Course course = new Course();
-        course.setCourseId(new BigInteger("1"));
-        course.setCourseName("TestCourse");
-        course.setCourseCode("Angel");
+        Course course = CourseUtil.createCourse();
 
         Mockito.when(courseService.createCourse(course)).thenReturn(course);
 
-        mockMvc.perform(MockMvcRequestBuilders.post(uri)
-                .contentType(MediaType.APPLICATION_JSON_VALUE).content("{\"courseId\": 1,\"courseName\": \"TestCourse\",\"courseCode\": \"Angel\"}"))
-                .andExpect(status().isOk())
+        mockMvc.perform(MockMvcRequestBuilders
+                .post(uri)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(getCourseJsonContent()))
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.courseId", Matchers.is(1)))
                 .andExpect(jsonPath("$.courseName", Matchers.is("TestCourse")))
                 .andExpect(jsonPath("$.courseCode", Matchers.is("Angel")));
@@ -102,34 +110,79 @@ public class CourseControllerTest {
         String uri = "/createCourse";
 
         mockMvc.perform(MockMvcRequestBuilders.post(uri)
-               .contentType(MediaType.APPLICATION_JSON_VALUE).content("{\"courseid\": 1}"))
+               .contentType(MediaType.APPLICATION_JSON_VALUE).content("{\"courseId\": 1}"))
                .andExpect(status().isBadRequest());
     }
 
     @Test
     public void deleteCourseById_success() throws Exception {
-        Mockito
-                .doNothing()
+        Mockito.doNothing()
                 .when(courseService)
                 .deleteCourseById(any(BigInteger.class));
 
-        mockMvc.perform(
-                MockMvcRequestBuilders.delete("/deleteCourse/{id}", BigInteger.valueOf(123))
+        mockMvc.perform(MockMvcRequestBuilders
+                .delete("/deleteCourse/{id}", BigInteger.valueOf(123))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
+
+        verify(courseService)
+                .deleteCourseById(BigInteger.valueOf(123));
+    }
+
+    @Test
+    void deleteCourseById_failure() throws Exception {
+        doThrow(NoRecordFoundException.class)
+                .when(courseService)
+                .deleteCourseById(any(BigInteger.class));
+
+        mockMvc.perform(MockMvcRequestBuilders
+               .delete("/deleteCourse/{id}", BigInteger.valueOf(123))
+               .contentType(MediaType.APPLICATION_JSON))
+               .andExpect(status().isNotFound());
 
         verify(courseService).deleteCourseById(BigInteger.valueOf(123));
     }
 
     @Test
-    void deleteCourseById_failure() throws Exception {
-        doThrow(NoRecordFoundException.class).when(courseService).deleteCourseById(any(BigInteger.class));
+    public void updateCourse_success() throws Exception {
+        String uri = "/updateCourse/1";
+        BigInteger id = new BigInteger("1");
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/deleteCourse/{id}", BigInteger.valueOf(123))
-               .contentType(MediaType.APPLICATION_JSON))
-               .andExpect(status().isNotFound()); // Expecting a 404 status code for NoRecordFoundException
+        Course course = CourseUtil.createCourse();
 
-        verify(courseService).deleteCourseById(BigInteger.valueOf(123));
+        Mockito.when(courseService.updateCourse(id, course))
+               .thenReturn(course);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put(uri)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(getCourseJsonContent()))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.courseId", Matchers.is(1)))
+                        .andExpect(jsonPath("$.courseName", Matchers.is("TestCourse")))
+                        .andExpect(jsonPath("$.courseCode", Matchers.is("Angel")));
     }
 
+    @Test
+    public void updateCourse_failure() throws Exception {
+        BigInteger id = new BigInteger("1");
+
+        Course course = CourseUtil.createCourse();
+
+        doThrow(NoRecordFoundException.class)
+                .when(courseService)
+                .updateCourse(id, course);
+
+        mockMvc.perform(MockMvcRequestBuilders
+               .put("/updateCourse/{id}", id)
+               .contentType(MediaType.APPLICATION_JSON)
+               .content(getCourseJsonContent()))
+               .andExpect(status().isNotFound());
+
+        verify(courseService).updateCourse(id, course);
+    }
+
+    String getCourseJsonContent() {
+        return "{\"courseId\": 1,\"courseName\": \"TestCourse\",\"courseCode\": \"Angel\"}";
+    }
 }
