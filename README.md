@@ -30,8 +30,10 @@ In joint master's programs across different universities, students and teachers 
 - **REST:** The REST architectural style was chosen for designing the API to ensure scalability.
 - **Junit-Mockito:** Junit and Mockito are used for testing the application.
 - **Jacoco:** Jacoco is used for code coverage analysis
-- **Swagger:** Swagger is used to automatically generate API documentation.
+- **Swagger:** Swagger is used to generate API documentation.
 - **Maven:** Maven is used for project management and builds because it offers an organized approach to a development workflow.
+- **Jenkins:** Jenkins is used for automation because it's open source.
+- **Docker:** Docker is used for containerization
 
 # Concepts
 

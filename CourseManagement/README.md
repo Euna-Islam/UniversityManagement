@@ -4,9 +4,7 @@ This project is a microservice that serves as the backend for a University Cours
 - [Overview](#overview)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
-- [Code Structure](#code-structure)
 - [Test Coverage](#test-coverage)
-- [Jenkins Pipeline Script](#jenkins-pipeline-script)
 - [License](#license)
 
 ## Features
@@ -29,47 +27,11 @@ This project is  a REST API built with Java and Spring Boot. It provides endpoin
 - **Jacoco:** Jacoco is used for code coverage analysis
 - **Swagger:** Swagger is used to automatically generate API documentation.
 - **Maven:** Maven is used for project management and builds because it offers an organized approach to a development workflow.
-- **Jenkins:** Jenkins is used for automation because it's open source. 
-
-## Code Structure
-In the source directory, the Java classes have been organized based on the functionality of the classes. The controller has the controller class which contains the rest endpoints, the repository folder holds the repository class which extends the JPA repository, and so on. Here is a snapshot of the directory structure:
-
-![image](https://user-images.githubusercontent.com/15722492/154832755-072c411d-8c01-411b-b191-77ac1fef2d97.png)
+- **Jenkins:** Jenkins is used for automation because it's open source.
+- **Docker:** Docker is used for containerization
 
 ## Test Coverage
 ![image](img/coverage.png)
-
-## Jenkins Pipeline Script
-
-```
-pipeline {
-    agent any
-    tools {
-        maven "M3"
-    }
-    environment {
-        PATH = "${PATH};c:\\Windows\\System32"
-    }
-    stages {
-        stage('Build') {
-            steps {
-                checkout([$class: 'GitSCM', branches: [[name: 'main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/Euna-Islam/UniversityManagement']]])
-
-                bat "mvn -f path-to-pom/pom.xml -Dmaven.test.failure.ignore=true clean package"
-            }
-            post {
-                success {
-                    echo 'Pipeline succeeded!'
-                }
-                failure {
-                    echo 'Pipeline failed!'
-                }
-            }
-        }
-    }
-}
-
-```
 
 ## License
 Apache 2.0
