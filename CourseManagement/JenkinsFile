@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+
+    tools {
+        maven "M3"
+    }
+    environment {
+        PATH = "${PATH};c:\\Windows\\System32"
+        DOCKERHUB_CREDENTIALS=credentials('dockerhub')
+    }
+
+    stages {
+
+        stage('Build') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: 'main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/Euna-Islam/UniversityManagement']]])
+
+
+                bat "mvn -f path-to-pom.xml -Dmaven.test.failure.ignore=true -Djar.finalName=CourseManagement clean package"
+
+				dir('path-to-service-repo') {
+                    bat "docker build -f path-to-Dockerfile -t eunai/course-management:latest ."
+
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                        bat "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
+                    }
+
+                    bat 'docker push eunai/course-management:latest'
+                }
+            }
+
+            post {
+                success {
+                    echo 'Pipeline succeeded!'
+                }
+
+                failure {
+                    echo 'Pipeline failed!'
+                }
+            }
+        }
+
+    post {
+		always {
+			bat 'docker logout'
+		}
+	}
+}
