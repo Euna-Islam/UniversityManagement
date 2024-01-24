@@ -6,6 +6,7 @@ pipeline {
     }
     environment {
         PATH = "${PATH};c:\\Windows\\System32"
+        //use dockerhub creds configured in Jenkins
         DOCKERHUB_CREDENTIALS=credentials('dockerhub')
     }
 
@@ -13,14 +14,15 @@ pipeline {
 
         stage('Build') {
             steps {
+                //get the source code
                 checkout([$class: 'GitSCM', branches: [[name: 'main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/Euna-Islam/UniversityManagement']]])
+                //bat "mvn -f path-to-pom.xml -Dmaven.test.failure.ignore=true -Djar.finalName=CourseManagement clean package"
 
-
-                bat "mvn -f path-to-pom.xml -Dmaven.test.failure.ignore=true -Djar.finalName=CourseManagement clean package"
-
+                //navigate to path
 				dir('path-to-service-repo') {
+				    //build image
                     bat "docker build -f path-to-Dockerfile -t eunai/course-management:latest ."
-
+                    //push with docker credentials
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
                         bat "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
                     }
@@ -42,6 +44,7 @@ pipeline {
 
     post {
 		always {
+		//logout from dockerhub
 			bat 'docker logout'
 		}
 	}
