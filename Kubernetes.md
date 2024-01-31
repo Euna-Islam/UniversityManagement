@@ -7,6 +7,6 @@
 - handles automation/failover/centralized logging/monitoring
 
 ## Architecture 
-- deployed as cluster
+- deployed as a cluster
 - has 2 main parts: master and worker nodes
-
+![Usage](diagrams/Kubernetes.PNG?raw=true "Usage")
