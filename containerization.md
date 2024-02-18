@@ -1,7 +1,7 @@
 ## Virtualization
 - allows a single physical server to act like multiple computers
-- creates virtual version of resources(cpu, memory, storage etc)
-- these virtual resources can run seperate app/os seperately on a single machine
+- creates virtual version of resources(CPU, memory, storage etc)
+- these virtual resources can run separate app/os separately on a single machine
 
 ### Key components of Virtualization
 #### Hypervisor
@@ -39,7 +39,7 @@
 - container does not have a full OS like a VM
 - containers share the host system's kernel which reduces overhead and improves efficiency compared to VM
 - containers provides the app exactly what resource it needs, thus preventing waste
-- in container, app run independently from host OS because OS is removed from self contained environment
+- in container, app run independently from host OS because OS is removed from self-contained environment
 
 ## Container Orchestration
 - allows automatic management of containers
@@ -90,3 +90,13 @@
 - if a container goes down, the file systems is also erased
 - but the contents of a volume persists after container restart and it can be accessed by all containers across pod
 
+
+### Extra
+#### Serverless Computing
+- vendor manages server infrastructure powering application
+- while container gives complete control of app environment, in serverless org does not need to maintain resouces
+
+#### Cloud Native
+- app is born and reside in an cloud computing environment
+- offers scalability
+- containerization is one of the techs used to build cloud native apps
