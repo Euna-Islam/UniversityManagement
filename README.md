@@ -16,6 +16,8 @@ In joint master's programs across different universities, students and teachers 
   - [REST](#rest)
   - [HTTP](#http)
   - [Microservices](#microservices)
+  - [Containerization](containerization.md)
+  - [CI/CD](ci-cd.md)
 - [Tools](#tools)
   - [Spring Framework](#spring-framework)
   - [Spring MVC](#spring-mvc)
