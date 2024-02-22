@@ -1,9 +1,20 @@
+## Table of Contents
+- [Virtualization](#virtualization)
+  - [Key components of Virtualization](#key-components-of-virtualization)
+- [Containerization](#containerization)
+- [Virtualization vs Containerization](#virtualization-vs-containerization)
+- [Container Orchestration](#container-orchestration)
+- [On Docker](#on-docker)
+- [On Kubernetes](#on-kubernetes)
+- [Serverless Computing, Cloud Native](#extra)
+
 ## Virtualization
 - allows a single physical server to act like multiple computers
 - creates virtual version of resources(CPU, memory, storage etc)
 - these virtual resources can run separate app/os separately on a single machine
 
 ### Key components of Virtualization
+
 #### Hypervisor
 - runs on the physical host
 - pools the hosts resources and allocates them to virtual machine
