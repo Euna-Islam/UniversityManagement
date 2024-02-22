@@ -18,6 +18,7 @@ In joint master's programs across different universities, students and teachers 
   - [Microservices](#microservices)
   - [Containerization](containerization.md)
   - [CI/CD](ci-cd.md)
+  - [Scalability](scalability.md)
 - [Tools](#tools)
   - [Spring Framework](#spring-framework)
   - [Spring MVC](#spring-mvc)
