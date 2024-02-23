@@ -1,12 +1,14 @@
 ## Build ##
 # base image
 FROM maven:3-openjdk-16-slim AS build
+
 # set the working directory
 WORKDIR /opt/app
 # copy contents
 COPY ./ /opt/app
 #build
 RUN mvn clean install -DskipTests
+
 ## Run time ##
 # base image
 FROM openjdk:8-jdk-alpine
