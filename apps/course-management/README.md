@@ -31,7 +31,7 @@ This project is  a REST API built with Java and Spring Boot. It provides endpoin
 - **Docker:** Docker is used for containerization
 
 ## Test Coverage
-![image](https://github.com/Euna-Islam/UniversityManagement/blob/develop/apps/crud/img/coverage.png)
+![image](img/coverage.png)
 
 ## License
 Apache 2.0
